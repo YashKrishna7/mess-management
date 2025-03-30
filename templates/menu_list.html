@@ -1,0 +1,15 @@
+{% for item in menu_items %}
+    <div class="menu-item">
+        <h3>{{ item.name }}</h3>
+        <p>{{ item.description }}</p>
+        <p>Price: ₹{{ item.price }}</p>
+
+        {% if user.is_superuser %}
+            <!-- Show Delete Option for Admin -->
+            <a href="{% url 'delete_menu_item' item.id %}" class="text-red-500">Delete</a>
+        {% else %}
+            <!-- Show Buy Option for Students -->
+            <a href="{% url 'buy_menu_item' item.id %}" class="text-green-500">Buy</a>
+        {% endif %}
+    </div>
+{% endfor %}

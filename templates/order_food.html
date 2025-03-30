@@ -1,0 +1,16 @@
+{% comment %} {% extends 'base.html' %} {% endcomment %}
+{% block content %}
+<h2 class="text-2xl font-bold mb-4">Order Food</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Order</button>
+</form>
+
+<h3 class="text-xl font-bold mt-6">Available Menu</h3>
+<ul>
+    {% for item in menu_items %}
+        <li>{{ item.name }} - ${{ item.price }}</li>
+    {% endfor %}
+</ul>
+{% endblock %}

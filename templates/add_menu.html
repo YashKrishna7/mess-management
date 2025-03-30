@@ -1,0 +1,10 @@
+{% comment %} {% include "home.html" %} {% endcomment %}
+{% block content %}
+<h2>Add Menu Item</h2>
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Add</button>
+</form>
+<a href="{% url 'menu_list' %}">Back to Menu</a>
+{% endblock %}

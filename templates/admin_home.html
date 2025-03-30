@@ -1,0 +1,22 @@
+{% comment %} {% extends 'base.html' %} {% endcomment %}
+{% block content %}
+<h2 class="text-center text-3xl font-bold mb-6">Admin Dashboard</h2>
+<div class="grid md:grid-cols-2 gap-8">
+    <a href="{% url 'add_menu_item' %}" class="bg-blue-100 p-6 rounded-lg shadow-md hover:shadow-lg transition duration-300">
+        <i class="fas fa-plus text-4xl text-blue-600 mb-4"></i>
+        <h3 class="text-xl font-semibold mb-3">Add Menu</h3>
+    </a>
+    {% comment %} <a href="{% url 'student_list' %}" class="bg-green-100 p-6 rounded-lg shadow-md hover:shadow-lg transition duration-300"> {% endcomment %}
+        <i class="fas fa-users text-4xl text-green-600 mb-4"></i>
+        <h3 class="text-xl font-semibold mb-3">Student Details</h3>
+    </a>
+    {% comment %} <a href="{% url 'add_student' %}" class="bg-purple-100 p-6 rounded-lg shadow-md hover:shadow-lg transition duration-300"> {% endcomment %}
+        <i class="fas fa-user-plus text-4xl text-purple-600 mb-4"></i>
+        <h3 class="text-xl font-semibold mb-3">Add Student</h3>
+    </a>
+    {% comment %} <a href="{% url 'student_payments' %}" class="bg-yellow-100 p-6 rounded-lg shadow-md hover:shadow-lg transition duration-300"> {% endcomment %}
+        <i class="fas fa-credit-card text-4xl text-yellow-600 mb-4"></i>
+        <h3 class="text-xl font-semibold mb-3">Student Payments</h3>
+    </a>
+</div>
+{% endblock %}

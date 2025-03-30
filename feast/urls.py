@@ -31,12 +31,19 @@
 # ]
 
 from django.urls import path
-from . import views
+from . views import *
 
 urlpatterns = [
-    path('signup/', views.signup_view, name='signup'),
-    path('signin/', views.signin_view, name='signin'),
-    path('logout/', views.logout_view, name='logout'),
-    path('home/', views.home_view, name='home'),
-    path('', views.welcome_view, name='welcome'),
+    path('signup/', signup_view, name='signup'),
+    path('signin/', signin_view, name='signin'),
+    path('logout/', logout_view, name='logout'),
+    path('home/', home_view, name='home'),
+    path('', welcome_view, name='welcome'),
+    path('menu/', menu_list, name='menu_list'),
+    path('menu/add/', add_menu_item, name='add_menu_item'),
+    path('menu/delete/<int:item_id>/', delete_menu_item, name='delete_menu_item'),
+    path('menu/buy/<int:item_id>/', buy_menu_item, name='buy_menu_item'),
+    path('expenses/', view_expense, name='view_expense'),
+    path('order/', order_food, name='order_food'),
+    path('orders/', view_orders, name='view_orders'),
 ]

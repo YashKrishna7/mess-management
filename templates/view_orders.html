@@ -1,0 +1,13 @@
+{% block content %}
+<h2 class="text-2xl font-bold mb-4">Today's Orders</h2>
+
+{% if orders %}
+<ul>
+    {% for order in orders %}
+        <li>{{ order.menu_item.name }} - Quantity: {{ order.quantity }} - Total: ${{ order.total_price }}</li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No orders placed today.</p>
+{% endif %}
+{% endblock %}
