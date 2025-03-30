@@ -218,7 +218,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Create an Account</title>
+  <title>Add Student</title>
   <script src="https://cdn.tailwindcss.com"></script>
     <script>
         
@@ -227,7 +227,7 @@
         }
     </script>
 </head>
-<body class="bg-cover bg-center h-screen"style="background-image: url(https://images.pexels.com/photos/1438761/pexels-photo-1438761.jpeg?cs=srgb&dl=pexels-digitech-1438761.jpg&fm=jpg);">
+<body class="bg-gray-100 bg-cover bg-center h-screen">
   <nav class="bg-blue-500 text-white shadow-lg">
     <div class="container mx-auto px-6 py-4 flex items-center justify-between">
       <div class="flex items-center space-x-2">
@@ -240,7 +240,7 @@
         </button>
         <div id="dropdownMenu" class="hidden absolute right-0 mt-2 w-40 bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5">
             <div class="py-1">
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">HOME</a>
+                    <a href="{% url 'home_view' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">HOME</a>
                     <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Help</a>
             </div>
         </div>
@@ -251,8 +251,8 @@
 
   
   <div class="flex items-center justify-center min-h-screen">
-    <div class="w-full max-w-md bg-gray-800 text-white rounded-lg p-8 shadow-lg">
-      <h2 class="text-2xl font-bold text-center mb-6">Create an account</h2>
+    <div class="w-full max-w-md bg-white-200 text-black rounded-lg p-8 shadow-lg">
+      <h2 class="text-2xl font-bold text-center mb-6">Add Student</h2>
         <form method="POST">
             {% csrf_token %}
             <div class="mb-4">
@@ -308,7 +308,7 @@
                 <br><button 
                     type="submit" 
                     class="w-full bg-blue-400 text-white font-bold py-2 rounded-lg hover:bg-blue-500 transition-all" >
-                    SIGNUP
+                    Add
                 </button>
             </div>
         </form>
