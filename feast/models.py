@@ -166,12 +166,14 @@ from django.utils.timezone import now
 
 
 class User(AbstractUser):
-    USER_TYPE_CHOICES = [
+    USER_TYPES = [
         ('student', 'Student'),
         ('canteen_owner', 'Canteen Owner'),
+        ('admin', 'Admin'),
     ]
+    user_type = models.CharField(max_length=20, choices=USER_TYPES, default='student')
 
-    user_type = models.CharField(max_length=20, choices=USER_TYPE_CHOICES)
+    # user_type = models.CharField(max_length=20, choices=USER_TYPE_CHOICES)
     phone_number = models.CharField(max_length=15, blank=True, null=True)
     address = models.TextField(blank=True, null=True)
 

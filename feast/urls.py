@@ -46,4 +46,5 @@ urlpatterns = [
     path('expenses/', view_expense, name='view_expense'),
     path('order/', order_food, name='order_food'),
     path('orders/', view_orders, name='view_orders'),
+    # path('students_details/', canteen_student_details, name='canteen_student_details'),
 ]

@@ -15,6 +15,8 @@ from django.db.models import Sum
 from django.utils.timezone import localdate
 from datetime import datetime
 from django.utils.timezone import now
+from django.db.models import Sum
+from .models import User, Order
 
 def signup_view(request):
     if request.method == 'POST':
@@ -99,15 +101,10 @@ def buy_menu_item(request, item_id):
 
 @login_required
 def view_expense(request):
-    today = localdate()
-    month = today.month
-    year = today.year
-
-    daily_expense = Order.objects.filter(student=request.user, order_date__date=today).aggregate(Sum('total_price'))['total_price__sum'] or 0
-    monthly_expense = Order.objects.filter(student=request.user, order_date__month=month, order_date__year=year).aggregate(Sum('total_price'))['total_price__sum'] or 0
-
-    return render(request, 'expense.html', {'daily_expense': daily_expense, 'monthly_expense': monthly_expense})
-
+    today = localdate()  # Gets the current date
+    daily_expense = Order.objects.filter(student=request.user, order_date=today).aggregate(Sum('total_price'))['total_price__sum'] or 0
+    
+    return render(request, 'expense.html', {'daily_expense': daily_expense})
 
 @login_required
 def order_food(request):
@@ -130,3 +127,18 @@ def order_food(request):
 def view_orders(request):
     today_orders = Order.objects.filter(student=request.user, order_date=now().date())
     return render(request, 'view_orders.html', {'orders': today_orders})
+
+### owner side stdent details
+# @login_required
+# def canteen_student_details(request):
+#     if request.user.user_type != 'canteen_owner':
+#         return render(request, 'error.html', {'message': 'Access Denied'})
+
+#     students = User.objects.filter(user_type='student')
+
+#     student_expenses = []
+#     for student in students:
+#         total_expense = Order.objects.filter(student=student).aggregate(Sum('total_price'))['total_price__sum'] or 0
+#         student_expenses.append({'student': student, 'total_expense': total_expense})
+
+#     return render(request, 'student_details.html', {'student_expenses': student_expenses})
