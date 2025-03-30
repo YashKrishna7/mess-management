@@ -43,10 +43,14 @@ def signin_view(request):
 def logout_view(request):
     logout(request)
     messages.success(request, 'Logged out successfully!')
-    return redirect('signin')
+    return redirect('welcome')
 def home_view(request):
     user=request.user
     # print('user',request.user)
     return render(request,'home.html',{'user':user})
+def welcome_view(request):
+    user=request.user
+    # print('user',request.user)
+    return render(request,'welcome.html',{'user':user})
 # def home_view(request):
 #     return render(request, 'feast/home.html')
