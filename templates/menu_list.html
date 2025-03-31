@@ -34,7 +34,6 @@
             </button>
             <ul class="hidden md:flex space-x-6" id="menu">
                 {% if user.is_superuser %}  {# Admin #}
-                    <li><a href="{% url 'home' %}" class="hover:text-gray-300">Home</a></li>
                     <li><a href="{% url 'add_menu_item' %}" class="hover:text-gray-300">Add Menu</a></li>
                 <!-- <li><a href="#" class="hover:text-gray-300">Orders</a></li> -->
                 {% endif %}
