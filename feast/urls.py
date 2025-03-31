@@ -46,6 +46,8 @@ urlpatterns = [
     path('expenses/', view_expense, name='view_expense'),
     path('order/', order_food, name='order_food'),
     path('orders/', view_orders, name='view_orders'),
-    path('admin_home/', home_view, name='home_view'),
-    # path('students_details/', canteen_student_details, name='canteen_student_details'),
+    # path('admin_home/', home_view, name='home_view'),
+    # path('student_home/', home_view, name='home_view'),
+    path('students_details/', canteen_student_details, name='student_details'),
+    path("select-in/", select_in_option, name="select_in_option"),
 ]

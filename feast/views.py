@@ -17,7 +17,9 @@ from datetime import datetime
 from django.utils.timezone import now
 from django.db.models import Sum
 from .models import User, Order
-
+from datetime import time
+from django.utils.timezone import localtime
+from django.http import JsonResponse
 def signup_view(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
@@ -100,11 +102,67 @@ def buy_menu_item(request, item_id):
 
 
 @login_required
+# def view_expense(request):
+#     today = localdate()  # Gets the current date
+#     daily_expense = Order.objects.filter(student=request.user, order_date=today).aggregate(Sum('total_price'))['total_price__sum'] or 0
+#     return render(request, 'expense.html', {'daily_expense': daily_expense})
+
+# def view_expense(request):
+#     today = localdate()  # Corrected: No arguments
+
+#     current_month = today.month
+#     current_year = today.year
+
+#     # Calculate daily expense
+#     daily_expense = Order.objects.filter(
+#         student=request.user, order_date=today
+#     ).aggregate(Sum('total_price'))['total_price__sum'] or 0
+
+#     # Calculate monthly expense
+#     monthly_expense = Order.objects.filter(
+#         student=request.user,
+#         order_date__year=current_year,
+#         order_date__month=current_month
+#     ).aggregate(Sum('total_price'))['total_price__sum'] or 0
+
+#     return render(request, 'expense.html', {
+#         'daily_expense': daily_expense,
+#         'monthly_expense': monthly_expense
+#     })
+
+
 def view_expense(request):
-    today = localdate()  # Gets the current date
-    daily_expense = Order.objects.filter(student=request.user, order_date=today).aggregate(Sum('total_price'))['total_price__sum'] or 0
-    
-    return render(request, 'expense.html', {'daily_expense': daily_expense})
+    today = localdate()
+    current_month = today.month
+    current_year = today.year
+
+    # Daily expense
+    daily_expense = Order.objects.filter(
+        student=request.user, order_date=today
+    ).aggregate(Sum('total_price'))['total_price__sum'] or 0
+
+    # Monthly expense
+    monthly_expense = Order.objects.filter(
+        student=request.user,
+        order_date__year=current_year,
+        order_date__month=current_month
+    ).aggregate(Sum('total_price'))['total_price__sum'] or 0
+
+    # Expenses per day for the current month
+    daily_expenses = Order.objects.filter(
+        student=request.user,
+        order_date__year=current_year,
+        order_date__month=current_month
+    ).values('order_date').annotate(
+        total=Sum('total_price')
+    ).order_by('order_date')  # Sorting by date
+
+    return render(request, 'expense.html', {
+        'daily_expense': daily_expense,
+        'monthly_expense': monthly_expense,
+        'daily_expenses': daily_expenses,  # List of {'order_date': date, 'total': amount}
+    })
+
 
 @login_required
 def order_food(request):
@@ -129,16 +187,65 @@ def view_orders(request):
     return render(request, 'view_orders.html', {'orders': today_orders})
 
 ### owner side stdent details
-# @login_required
-# def canteen_student_details(request):
-#     if request.user.user_type != 'canteen_owner':
-#         return render(request, 'error.html', {'message': 'Access Denied'})
+@login_required
+def canteen_student_details(request):
+    if request.user.user_type != 'canteen_owner':
+        return render(request, 'error.html', {'message': 'Access Denied'})
 
-#     students = User.objects.filter(user_type='student')
+    students = User.objects.filter(user_type='student')
 
-#     student_expenses = []
-#     for student in students:
-#         total_expense = Order.objects.filter(student=student).aggregate(Sum('total_price'))['total_price__sum'] or 0
-#         student_expenses.append({'student': student, 'total_expense': total_expense})
+    student_expenses = []
+    for student in students:
+        total_expense = Order.objects.filter(student=student).aggregate(Sum('total_price'))['total_price__sum'] or 0
+        student_expenses.append({'student': student, 'total_expense': total_expense})
 
-#     return render(request, 'student_details.html', {'student_expenses': student_expenses})
+    return render(request, 'student_details.html', {'student_expenses': student_expenses})
+
+
+
+#IN option
+# def select_in_option(request):
+#     if request.method == "POST":
+#         current_time = localtime(now()).time()
+
+#         if not (18 <= current_time.hour <= 21):
+#             messages.error(request, "You can only select the 'IN' option between 6 PM and 9 PM.")
+#             return redirect("home")
+
+#         # Assuming authenticated student
+#         student = request.user  
+#         student.selected_in_today = True  # Update your model accordingly
+#         student.save()
+
+#         messages.success(request, "You are IN!")  # ✅ Success message
+
+#         return redirect("home")  # Redirect to home page
+
+#     return JsonResponse({"error": "Invalid request"}, status=400)
+
+def select_in_option(request):
+    if request.method == "POST":
+        current_time = localtime(now()).time()
+
+        if not (18 <= current_time.hour <= 21):
+            messages.error(request, "You can only select the 'IN' option between 6 PM and 9 PM.")
+            return redirect("home")
+
+        student = request.user  # Assuming authenticated student
+
+        if student.selected_in_today:
+            messages.warning(request, "You have already selected 'IN' for today.")
+            return redirect("home")
+
+        # ✅ Mark 'IN' as selected
+        student.selected_in_today = True  
+
+        # ✅ Add ₹95 to the student's expense
+        student.expense += 95  
+        student.save()
+
+        messages.success(request, "You are IN! ₹95 has been added to your expense.")
+
+        return redirect("home")  
+
+    return JsonResponse({"error": "Invalid request"}, status=400)

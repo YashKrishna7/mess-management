@@ -33,13 +33,12 @@
                 ☰
             </button>
             <ul class="hidden md:flex space-x-6" id="menu">
-                {% if user.user_type == "1" %}  {# Admin #}
-                    <li><a href="{% url 'home_view' %}" class="hover:text-gray-300">Home</a></li>
-                {% elif user.user_type == "3" %}  {# Student #}
+                {% if user.is_superuser %}  {# Admin #}
+                    <li><a href="{% url 'home' %}" class="hover:text-gray-300">Home</a></li>
                     <li><a href="{% url 'add_menu_item' %}" class="hover:text-gray-300">Add Menu</a></li>
                 <!-- <li><a href="#" class="hover:text-gray-300">Orders</a></li> -->
                 {% endif %}
-                <li><a href="{% url 'logout' %}" class="hover:text-gray-300">SignOut</a></li>
+                <li><a href="{% url 'home' %}" class="hover:text-gray-300">Home</a></li>
             </ul>
         </div>
     </nav>
@@ -54,12 +53,12 @@
                     <p class="text-gray-600">{{ item.description }}</p>
                     <p class="font-bold text-blue-600">Price: ₹{{ item.price }}</p>
 
-                    {% if user.user_type == "1" %}  {# Admin #}
+                    {% if user.is_superuser %}  {# Admin #}
                         <a href="{% url 'delete_menu_item' item.id %}" 
                            class="text-red-600 hover:text-red-800 font-medium block mt-2">
                             Delete
                         </a>
-                    {% elif user.user_type == "3" %}  {# Student #}
+                        {% else %} {# Student #}
                         <a href="{% url 'buy_menu_item' item.id %}" 
                            class="text-green-600 hover:text-green-800 font-medium block mt-2">
                             Buy
