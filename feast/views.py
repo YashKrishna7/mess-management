@@ -20,17 +20,18 @@ from .models import User, Order
 from datetime import time
 from django.utils.timezone import localtime
 from django.http import JsonResponse
-def signup_view(request):
+
+def add_student(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)
             messages.success(request, 'Account created successfully!')
-            return redirect('home')  # Redirect to your home page
+            return redirect('student_list')  # Redirect to your students list
     else:
         form = SignUpForm()
-    return render(request, 'signup.html', {'form': form})
+    return render(request, 'add_student.html', {'form': form})
 
 def signin_view(request):
     if request.method == 'POST':
@@ -102,33 +103,6 @@ def buy_menu_item(request, item_id):
 
 
 @login_required
-# def view_expense(request):
-#     today = localdate()  # Gets the current date
-#     daily_expense = Order.objects.filter(student=request.user, order_date=today).aggregate(Sum('total_price'))['total_price__sum'] or 0
-#     return render(request, 'expense.html', {'daily_expense': daily_expense})
-
-# def view_expense(request):
-#     today = localdate()  # Corrected: No arguments
-
-#     current_month = today.month
-#     current_year = today.year
-
-#     # Calculate daily expense
-#     daily_expense = Order.objects.filter(
-#         student=request.user, order_date=today
-#     ).aggregate(Sum('total_price'))['total_price__sum'] or 0
-
-#     # Calculate monthly expense
-#     monthly_expense = Order.objects.filter(
-#         student=request.user,
-#         order_date__year=current_year,
-#         order_date__month=current_month
-#     ).aggregate(Sum('total_price'))['total_price__sum'] or 0
-
-#     return render(request, 'expense.html', {
-#         'daily_expense': daily_expense,
-#         'monthly_expense': monthly_expense
-#     })
 
 
 def view_expense(request):
@@ -203,25 +177,6 @@ def canteen_student_details(request):
 
 
 
-#IN option
-# def select_in_option(request):
-#     if request.method == "POST":
-#         current_time = localtime(now()).time()
-
-#         if not (18 <= current_time.hour <= 21):
-#             messages.error(request, "You can only select the 'IN' option between 6 PM and 9 PM.")
-#             return redirect("home")
-
-#         # Assuming authenticated student
-#         student = request.user  
-#         student.selected_in_today = True  # Update your model accordingly
-#         student.save()
-
-#         messages.success(request, "You are IN!")  # ✅ Success message
-
-#         return redirect("home")  # Redirect to home page
-
-#     return JsonResponse({"error": "Invalid request"}, status=400)
 
 def select_in_option(request):
     if request.method == "POST":
@@ -249,3 +204,89 @@ def select_in_option(request):
         return redirect("home")  
 
     return JsonResponse({"error": "Invalid request"}, status=400)
+
+# def view_students(request):
+#     if not hasattr(request.user, 'user_type'):
+#         messages.error(request, "Invalid user type.")
+#         return redirect('home')
+
+#     if request.user.user_type != 'canteen_owner':
+#         messages.error(request, "You do not have permission to view this page.")
+#         return redirect('student_list')
+
+#     students = User.objects.filter(user_type='student')
+#     return render(request, '#', {'students': students})
+
+
+# from django.core.paginator import Paginator
+
+# def view_students(request):
+#     if request.user.user_type != 'canteen_owner':
+#         messages.error( "You do not have permission to view this page.")
+#         return redirect('home')
+
+#     student_list = User.objects.filter(user_type='student')
+#     paginator = Paginator(student_list, 10)  # Show 10 students per page
+#     page_number = request.GET.get('page')
+#     page_obj = paginator.get_page(page_number)
+
+#     return render(request, 'student_list.html', {'page_obj': page_obj})
+
+
+
+
+# def view_students(request):
+#     # Ensure only the canteen owner can access this view
+#     if request.user.user_type != 'canteen_owner':
+#         messages.error(request, "You do not have permission to view this page.")
+#         return redirect('home')  # Redirect to home or another page
+
+#     students = User.objects.filter(user_type='student')  # Get all students
+#     return render(request, 'view_students.html', {'students': students})
+
+# def view_expense(request):
+#     today = localdate()  # Gets the current date
+#     daily_expense = Order.objects.filter(student=request.user, order_date=today).aggregate(Sum('total_price'))['total_price__sum'] or 0
+#     return render(request, 'expense.html', {'daily_expense': daily_expense})
+
+# def view_expense(request):
+#     today = localdate()  # Corrected: No arguments
+
+#     current_month = today.month
+#     current_year = today.year
+
+#     # Calculate daily expense
+#     daily_expense = Order.objects.filter(
+#         student=request.user, order_date=today
+#     ).aggregate(Sum('total_price'))['total_price__sum'] or 0
+
+#     # Calculate monthly expense
+#     monthly_expense = Order.objects.filter(
+#         student=request.user,
+#         order_date__year=current_year,
+#         order_date__month=current_month
+#     ).aggregate(Sum('total_price'))['total_price__sum'] or 0
+
+#     return render(request, 'expense.html', {
+#         'daily_expense': daily_expense,
+#         'monthly_expense': monthly_expense
+#     })
+#IN option
+# def select_in_option(request):
+#     if request.method == "POST":
+#         current_time = localtime(now()).time()
+
+#         if not (18 <= current_time.hour <= 21):
+#             messages.error(request, "You can only select the 'IN' option between 6 PM and 9 PM.")
+#             return redirect("home")
+
+#         # Assuming authenticated student
+#         student = request.user  
+#         student.selected_in_today = True  # Update your model accordingly
+#         student.save()
+
+#         messages.success(request, "You are IN!")  # ✅ Success message
+
+#         return redirect("home")  # Redirect to home page
+
+#     return JsonResponse({"error": "Invalid request"}, status=400)

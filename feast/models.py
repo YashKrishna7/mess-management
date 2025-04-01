@@ -165,6 +165,52 @@ from django.utils.timezone import now
 #         return f"{self.user.username}'s Profile"
 
 
+# class User(AbstractUser):
+#     USER_TYPES = [
+#         ('student', 'Student'),
+#         ('canteen_owner', 'Canteen Owner'),
+#         ('admin', 'Admin'),
+#     ]
+#     user_type = models.CharField(max_length=20, choices=USER_TYPES, default='student')
+
+#     # user_type = models.CharField(max_length=20, choices=USER_TYPE_CHOICES)
+#     phone_number = models.CharField(max_length=15, blank=True, null=True)
+#     address = models.TextField(blank=True, null=True)
+
+#     groups = models.ManyToManyField(Group, related_name="custom_user_groups", blank=True)
+#     user_permissions = models.ManyToManyField(Permission, related_name="custom_user_permissions", blank=True)
+
+#     def __str__(self):
+#         return self.username
+
+# # Automatically create a Profile when a new User is created
+# @receiver(post_save, sender=User)
+# def create_user_profile(sender, instance, created, **kwargs):
+#     if created:
+#         User.objects.create(user=instance)
+
+# @receiver(post_save, sender=User)
+# def save_user_profile(sender, instance, **kwargs):
+#     instance.profile.save()
+
+
+# # Optional: For tracking login attempts (useful for security)
+# class LoginAttempt(models.Model):
+#     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+#     ip_address = models.GenericIPAddressField()
+#     timestamp = models.DateTimeField(auto_now_add=True)
+#     successful = models.BooleanField(default=False)
+#     user_agent = models.TextField(blank=True)
+    
+#     def __str__(self):
+#         status = "Successful" if self.successful else "Failed"
+#         return f"{status} login attempt for {self.user} from {self.ip_address}"
+    
+from django.contrib.auth.models import AbstractUser, Group, Permission
+from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
 class User(AbstractUser):
     USER_TYPES = [
         ('student', 'Student'),
@@ -172,14 +218,14 @@ class User(AbstractUser):
         ('admin', 'Admin'),
     ]
     user_type = models.CharField(max_length=20, choices=USER_TYPES, default='student')
-
-    # user_type = models.CharField(max_length=20, choices=USER_TYPE_CHOICES)
+    
+    # Additional fields
     phone_number = models.CharField(max_length=15, blank=True, null=True)
     address = models.TextField(blank=True, null=True)
-
+    
     groups = models.ManyToManyField(Group, related_name="custom_user_groups", blank=True)
     user_permissions = models.ManyToManyField(Permission, related_name="custom_user_permissions", blank=True)
-
+    
     def __str__(self):
         return self.username
 
@@ -187,12 +233,12 @@ class User(AbstractUser):
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        User.objects.create(user=instance)
+        # Ensure Profile model exists to create
+        Profile.objects.create(user=instance)
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
-
 
 # Optional: For tracking login attempts (useful for security)
 class LoginAttempt(models.Model):
@@ -205,7 +251,16 @@ class LoginAttempt(models.Model):
     def __str__(self):
         status = "Successful" if self.successful else "Failed"
         return f"{status} login attempt for {self.user} from {self.ip_address}"
-    
+
+# Profile model (optional, assuming it’s referenced in the above code)
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    # Add additional profile-specific fields here
+    # e.g., profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
+
+    def __str__(self):
+        return f"Profile of {self.user.username}"
+
 
 
 class Menu(models.Model):

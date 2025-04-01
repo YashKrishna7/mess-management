@@ -34,7 +34,7 @@ from django.urls import path
 from . views import *
 
 urlpatterns = [
-    path('signup/', signup_view, name='signup'),
+    path('add_student/', add_student, name='add_student'),
     path('signin/', signin_view, name='signin'),
     path('logout/', logout_view, name='logout'),
     path('home/', home_view, name='home'),
@@ -50,4 +50,5 @@ urlpatterns = [
     # path('student_home/', home_view, name='home_view'),
     path('students_details/', canteen_student_details, name='student_details'),
     path("select-in/", select_in_option, name="select_in_option"),
+    # path("student_list/", view_students, name="student_list"),
 ]
