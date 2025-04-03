@@ -50,5 +50,6 @@ urlpatterns = [
     # path('student_home/', home_view, name='home_view'),
     path('students_details/', canteen_student_details, name='student_details'),
     path("select-in/", select_in_option, name="select_in_option"),
-    # path("student_list/", view_students, name="student_list"),
+    path("student_added_success/", student_added_success, name="student_added_success"),
+    path("view_students/", view_students, name="view_students"),
 ]

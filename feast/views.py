@@ -28,7 +28,7 @@ def add_student(request):
             user = form.save()
             login(request, user)
             messages.success(request, 'Account created successfully!')
-            return redirect('student_list')  # Redirect to your students list
+            return redirect('student_added_success')  # Redirect to your students list
     else:
         form = SignUpForm()
     return render(request, 'add_student.html', {'form': form})
@@ -205,6 +205,12 @@ def select_in_option(request):
 
     return JsonResponse({"error": "Invalid request"}, status=400)
 
+
+
+def student_added_success(request):
+    return render(request, 'student_added_success.html')
+
+
 # def view_students(request):
 #     if not hasattr(request.user, 'user_type'):
 #         messages.error(request, "Invalid user type.")
@@ -218,19 +224,19 @@ def select_in_option(request):
 #     return render(request, '#', {'students': students})
 
 
-# from django.core.paginator import Paginator
+from django.core.paginator import Paginator
 
-# def view_students(request):
-#     if request.user.user_type != 'canteen_owner':
-#         messages.error( "You do not have permission to view this page.")
-#         return redirect('home')
+def view_students(request):
+    if request.user.user_type != 'canteen_owner':
+        messages.error( "You do not have permission to view this page.")
+        return redirect('home')
 
-#     student_list = User.objects.filter(user_type='student')
-#     paginator = Paginator(student_list, 10)  # Show 10 students per page
-#     page_number = request.GET.get('page')
-#     page_obj = paginator.get_page(page_number)
+    student_list = User.objects.filter(user_type='student')
+    paginator = Paginator(student_list, 10)  # Show 10 students per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
-#     return render(request, 'student_list.html', {'page_obj': page_obj})
+    return render(request, 'student_list.html', {'page_obj': page_obj})
 
 
 
